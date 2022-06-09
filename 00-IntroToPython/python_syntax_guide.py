@@ -1,3 +1,6 @@
+import random
+import math
+
 
 def variables():
     print("----- Variables (i.e. names) -------")
@@ -5,6 +8,8 @@ def variables():
     b = "Bob"
     print(x + 3)
     print(b * 3)
+    print(type(x))
+    print(type(b))
 
 
 def strings():
@@ -65,6 +70,24 @@ def sequences():
     print(f"The total value of all items is {total}")
 
 
+def functions(a, b, c):
+    print("----- Functions -------")
+    print("Input Arguments:", a, b, c)
+    return (a + b) / c
+
+
+def imports():
+    print("----- Imports -------")
+    print(random.randint(1, 1000))
+    print(random.randint(1, 1000))
+    print(random.randrange(20, 40, 2))
+    print(random.randrange(20, 40, 2))
+    print(random.randrange(20, 40, 2))
+    print(math.cos(2))
+    print(math.cos(3.1415926535897))
+    print(math.cos(math.pi))
+
+
 
 def main():
     # This line is a comment.  The next line is Python code.
@@ -72,7 +95,13 @@ def main():
     # variables()
     # strings()
     # loops()
-    sequences()
+    # sequences()
+    # result = functions(2, 3, 1)
+    # print(result)
+    # result = functions(60, 9, 3)
+    # print(result)
+    imports()
+
 
 
 main()
