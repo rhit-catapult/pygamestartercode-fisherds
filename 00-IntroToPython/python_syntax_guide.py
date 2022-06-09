@@ -87,6 +87,34 @@ def imports():
     print(math.cos(3.1415926535897))
     print(math.cos(math.pi))
 
+class Point():
+
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def move(self, dx, dy):
+        self.x = self.x + dx
+        self.y = self.y + dy
+
+    def transpose(self):
+        tmp = self.x
+        self.x = self.y
+        self.y = tmp
+
+
+def classes():
+    print("----- Classes -------")
+    pt1 = Point(2, 1)
+    pt2 = Point(3, 5)
+    pt3 = Point(100, 6000)
+    print(pt1.x, pt1.y, pt2.x, pt2.y, pt3.x, pt3.y)
+    pt1.x = 99
+    print(pt1.x, pt1.y, pt2.x, pt2.y, pt3.x, pt3.y)
+    pt2.move(100, 0)
+    print(pt1.x, pt1.y, pt2.x, pt2.y, pt3.x, pt3.y)
+    pt3.transpose()
+    print(pt1.x, pt1.y, pt2.x, pt2.y, pt3.x, pt3.y)
 
 
 def main():
@@ -100,7 +128,8 @@ def main():
     # print(result)
     # result = functions(60, 9, 3)
     # print(result)
-    imports()
+    # imports()
+    classes()
 
 
 
