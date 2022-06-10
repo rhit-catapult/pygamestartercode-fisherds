@@ -38,6 +38,8 @@ while True:
 
         # Additional interactions with events
 
+    screen.fill(pygame.Color("Gray"))
+
     # Draw things on the screen
 
     # Done 01: Try to draw a circle (any size, any color, anywhere)
