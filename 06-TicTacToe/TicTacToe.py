@@ -5,8 +5,10 @@ import sys
 # --------------------------- Conversion helper functions ---------------------------
 
 
-def get_row_col(mouse_x, mouse_y):
+def get_row_col(mouse_pos):
     """ Converts an x, y screen position into a row, col value. """
+    mouse_x = mouse_pos[0]  # Note: a point tuple is now passed into this function.
+    mouse_y = mouse_pos[1]
     # Note: the top row is row=0 (bottom row=2), left col is col=0 (right col=2)
     spacing_x = 86 + 8
     spacing_y = 98 + 5
@@ -135,7 +137,7 @@ class ViewController:
         if event.type == pygame.MOUSEBUTTONUP:
             # click_position = pygame.mouse.get_pos()
             click_position = event.pos  # Another mouse option
-            row, col = get_row_col(click_position[0], click_position[1])
+            row, col = get_row_col(event.pos)
             print(f"You clicked row {row} col {col}")
             self.game.take_turn(row, col)
         if event.type == pygame.KEYDOWN:

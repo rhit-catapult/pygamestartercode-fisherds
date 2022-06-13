@@ -21,16 +21,31 @@ class Missile:
 
 
 class Fighter:
-    def __init__(self, screen, x, y):
+    def __init__(self, screen):
         # Store the given parameters to instance variables.
         # Set   self.missiles   to the empty list.
         # Load the file  "fighter.png"  as the image
         # Set the colorkey to white (it has a white background that needs removed) using the method set_colorkey
-        pass
+        self.screen = screen
+        self.image = pygame.image.load("fighter.png")
+        self.image.set_colorkey((255, 255, 255))
+        self.x = screen.get_width() / 2 - self.image.get_width() / 2
+        self.y = screen.get_height() - self.image.get_height()
+        self.missiles = []
 
     def draw(self):
         # Draw this Fighter, using its image at its current (x, y) position.
-        pass
+        self.screen.blit(self.image, (self.x, self.y))
+
+    def move(self, delta_x):
+        # Move the ship!
+        self.x += delta_x
+        left_bound = - self.image.get_width() / 2
+        right_bound = self.screen.get_width() - self.image.get_width() / 2
+        if self.x < left_bound:
+            self.x = left_bound
+        if self.x > right_bound:
+            self.x = right_bound
 
     def fire(self):
         # Construct a new Missile self.image.get_width() / 2 pixels to the right of this Fighter's x position.
@@ -105,8 +120,9 @@ def main():
 
     # TODO 9: Set    enemy_rows    to an initial value of 3.
     # TODO 10: Create an EnemyFleet object (called enemy_fleet) with the screen and enemy_rows
-    # TODO 1: Create a Fighter (called fighter) at location  320, 590
+    # Done 1: Create a Fighter (called fighter) at location  320, 590
     #             Note: 320 is screen.get_width() / 2 and 590 is screen.get_height() - the ship's image height.
+    fighter = Fighter(screen)
 
     while True:
         clock.tick(60)
@@ -116,9 +132,15 @@ def main():
                 sys.exit()
 
         screen.fill((0, 0, 0))
-        # TODO 3: If pygame.K_LEFT is pressed and fighter.x is greater than -50 move the fighter left 5
-        # TODO 4: If pygame.K_RIGHT is pressed and fighter.x is less than 590 move the fighter right 5
-        # TODO 2: Draw the fighter
+        # Done 3: If pygame.K_LEFT is pressed and fighter.x is greater than -50 move the fighter left 5
+        # Done 4: If pygame.K_RIGHT is pressed and fighter.x is less than 590 move the fighter right 5
+        pressed_keys = pygame.key.get_pressed()
+        if pressed_keys[pygame.K_LEFT]:
+            fighter.move(-5)
+        if pressed_keys[pygame.K_RIGHT]:
+            fighter.move(5)
+        # Done 2: Draw the fighter
+        fighter.draw()
 
         # TODO 11: Move the enemy_fleet
         # TODO 12: Draw the enemy_fleet
