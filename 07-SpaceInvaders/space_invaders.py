@@ -1,147 +1,105 @@
-import pygame, sys
-import dave
+import pygame
+import sys
+import fighter_missile_module
+import enemy_fleet_module
+import game_over_module
 
-class Missile:
-    def __init__(self, screen, x):
-        # Store the data.  Initialize:   y to 591   and   has_exploded to False.
-        # Note: the 591 comes from the screen height (650) minus the ship image height (59).  Best practice would be to
-        #   pass in that value in case the ship image or screen height changes, but simplified here to always be 591.
-        pass
 
-    def move(self):
-        # Make self.y 5 smaller than it was (which will cause the Missile to move UP).
-        # Note: you could've instead passed in a speed when you made a Missle, but all missles in the game are the same
-        #   speed, so just using a hardcoded 5 is fine.
-        pass
+class Scoreboard:
+    def __init__(self, screen):
+        self.screen = screen
+        self.score = 0
+        self.font = pygame.font.Font(None, 30)
 
     def draw(self):
-        # Draw a vertical red (or green) line on the screen for the missile, 8 pixels long,  4 pixels thick
-        #   where the line starts at the current position of this Missile.
-        pass
-
-
-class Badguy:
-    def __init__(self, screen, x, y, speed):
-        # Store the given arguments as instance variables with the same names.
-        # Set   is_dead to False   and   original_x to x.
-        # Load the file  "badguy.png"  as the image. and set its colorkey to black.
-        # Additionally make a   move_right   instance variable set to to True (we might us it in the move method).
-        pass
-
-    def move(self):
-        # Move self.speed units horizontally in the current direction.
-        # If this Badguy's horizontal position is more than 100 pixels from its original x position, then...
-        #     change the direction
-        #     move the y down 4 * self.speed units
-        pass
-
-    def draw(self):
-        # Draw this Badguy, using its image at its current (x, y) position.
-        pass
-
-    def hit_by(self, missile):
-        # Make a Badguy hitbox rect.
-        # Return True if that hitbox collides with the xy point of the given missile.
-        pass
-
-
-class EnemyFleet:
-    def __init__(self, screen, enemy_rows):
-        # Already done.  Prepares the list of Badguys.
-        self.badguys = []
-        for j in range(enemy_rows):
-            for k in range(8):
-                self.badguys.append(Badguy(screen, 80 * k, 50 * j + 20, enemy_rows))
-
-    @property
-    def is_defeated(self):
-        # Return True if the number of badguys in this Enemy Fleet is 0,
-        # otherwise return False.
-        pass
-
-    def move(self):
-        # Make each Badguy in badguys move.
-        pass
-
-    def draw(self):
-        # Make each Badguy in badguys draw itself.
-        pass
-
-    def remove_dead_badguys(self):
-        for k in range(len(self.badguys) - 1, -1, -1):
-            if self.badguys[k].is_dead:
-                del self.badguys[k]
+        as_image = self.font.render(f"Score: {self.score}", True, (255, 255, 255))
+        self.screen.blit(as_image, (5, 5))
 
 
 def main():
     pygame.init()
-    clock = pygame.time.Clock()
-    pygame.display.set_caption("SPACE INVADERS!")
+    pygame.display.set_caption("Space Invaders")
     screen = pygame.display.set_mode((640, 650))
+    main_game_loop(screen)
 
-    # TODO 9: Set    enemy_rows    to an initial value of 3.
-    # TODO 10: Create an EnemyFleet object (called enemy_fleet) with the screen and enemy_rows
-    # Done 1: Create a Fighter (called fighter) at location  320, 590
-    #             Note: 320 is screen.get_width() / 2 and 590 is screen.get_height() - the ship's image height.
-    fighter = dave.Fighter(screen)
 
+def main_game_loop(screen):
+    allow_supergun = False
+
+    INITIAL_NUM_ROWS = 4
+    enemy_rows = INITIAL_NUM_ROWS
+    enemy_fleet = enemy_fleet_module.EnemyFleet(screen, enemy_rows)
+    fighter = fighter_missile_module.Fighter(screen)
+
+    # DONE: Create a Scoreboard, called scoreboard, using the screen at location 5, 5
+    scoreboard = Scoreboard(screen)
+    win_sound = pygame.mixer.Sound("sounds/win.wav")
+
+    clock = pygame.time.Clock()
     while True:
         clock.tick(60)
         for event in pygame.event.get():
-            # TODO 5: If the event type is KEYDOWN and pressed_keys[pygame.K_SPACE] is True, then fire a missile
+            # Doing something once when a key is PRESSED
+            if event.type == pygame.KEYDOWN:
+                pressed_keys = pygame.key.get_pressed()
+                if pressed_keys[pygame.K_SPACE]:
+                    fighter.fire()
             if event.type == pygame.QUIT:
                 sys.exit()
 
-        screen.fill((0, 0, 0))
-        # Done 3: If pygame.K_LEFT is pressed and fighter.x is greater than -50 move the fighter left 5
-        # Done 4: If pygame.K_RIGHT is pressed and fighter.x is less than 590 move the fighter right 5
+        # Doing something continually when a key is HELD DOWN
         pressed_keys = pygame.key.get_pressed()
         if pressed_keys[pygame.K_LEFT]:
             fighter.move(-5)
         if pressed_keys[pygame.K_RIGHT]:
             fighter.move(5)
-        # Done 2: Draw the fighter
+
+        # Optional
+        if allow_supergun and pressed_keys[pygame.K_SPACE]:
+            fighter.fire()
+
+        screen.fill((0, 0, 0))
+
+        scoreboard.draw()
+
+        enemy_fleet.move()
+        enemy_fleet.draw()
+
         fighter.draw()
+        for missile in fighter.missiles:
+            missile.move()
+            missile.draw()
 
-        # TODO 11: Move the enemy_fleet
-        # TODO 12: Draw the enemy_fleet
+        for badguy in enemy_fleet.badguys:
+            for missile in fighter.missiles:
+                if badguy.hit_by(missile):
+                    # DONE: Increment the score of the scoreboard by 100
+                    scoreboard.score = scoreboard.score + 100
+                    badguy.is_dead = True
+                    missile.has_exploded = True
 
-        # TODO 6: For each missile in the fighter missiles
-        #   TODO 7: Move the missile
-        #   TODO 8: Draw the missile
+        fighter.remove_exploded_missiles()
+        enemy_fleet.remove_dead_badguys()
 
-        # TODO 12: For each badguy in the enemy_fleet.badguys list
-        #     TODO 13: For each missile in the fighter missiles
-        #         TODO 14: If the badguy is hit by the missile
-        #             TODO 15: Mark the badguy is_dead = True
-        #             TODO 16: Mark the missile has_exploded = True
+        if enemy_fleet.is_defeated:
+            win_sound.play()
+            enemy_rows = enemy_rows + 1
+            enemy_fleet = enemy_fleet_module.EnemyFleet(screen, enemy_rows)
 
-        #     TODO 13 (optional extra): For each missile in the fighter missiles
-        #         TODO 14 (optional extra): If the missle.y is less than 0 (or -8)
-        #             TODO 16 (optional extra): Mark the missile has_exploded = True (cleaning up off screen stuff)
-
-        # TODO 17: Use the fighter to remove exploded missiles
-        # TODO 18: Use the enemy_fleet to remove dead badguys
-
-        # TODO 19: If the enemy is_defeated
-        #     TODO 20: Increment the enemy_rows
-        #     TODO 21: Create a new enemy_fleet with the screen and enemy_rows
-
-        # TODO 22: Check for your death.  Figure out what needs to happen.
-        # Hints: Check if a Badguy gets a y value greater than 545
-        #    Note: 545 is screen.get_height() -
-        #    If that happens set a variable (game_over) as appropriate
-        #    If the game is over, show the gameover.png image at (170, 200)
-
-        # TODO 23: Create a Scoreboard class (from scratch)
-        # Hints: Instance variables: screen, score, and font (size 30)
-        #    Methods: draw (and __init__)
-        # Create a scoreboard and draw it at location 5, 5
-        # When a Badguy is killed add 100 points to the scoreboard.score
-
-        # TODO 24: Optional extra - Add sound effects!
+        # Check for your death!
+        for badguy in enemy_fleet.badguys:
+            if badguy.y + badguy.image.get_height() >= fighter.y:
+                game_over_module.run_game_over_loop(screen)
+                # Note: that function is a new screen.  Code here runs when that screen closes.
+                # Reset necessary variables to play again.
+                scoreboard.score = 0
+                fighter.missiles.clear()
+                enemy_fleet.badguys.clear()
+                enemy_rows = INITIAL_NUM_ROWS
+                enemy_fleet = enemy_fleet_module.EnemyFleet(screen, enemy_rows)
 
         pygame.display.update()
 
 
-main()
+if __name__ == "__main__":
+    main()
