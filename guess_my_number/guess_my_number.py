@@ -5,7 +5,7 @@ print("Welcome to Guess My Number")
 # Create a secret number a random number between 1 and 100
 secret_number = random.randint(1, 100)
 # print("During development cheat", secret_number)
-print(f"During development cheat.  ans {secret_number}")
+# print(f"During development cheat.  ans {secret_number}")
 
 # Create a guess counter variable set to 0
 counter = 0
