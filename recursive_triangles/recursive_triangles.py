@@ -8,12 +8,12 @@ def main():
     turtle.pen = rg.Pen("red", 20)
     turtle.speed = 10
 
-    # thickness = 5
-    # print(f"Before {turtle.pen.color}  {thickness}")
-    # draw_triangle(turtle, "green", thickness, 300)
-    # print(f"Middle {turtle.pen.color}  {thickness}")
-    # draw_triangle(turtle, "pink", 20, 100)
-    # print(f"End {turtle.pen.color}  {thickness}")
+    thickness = 5
+    print(f"Before {turtle.pen.color}  {thickness}")
+    draw_triangle(turtle, "green", thickness, 300)
+    print(f"Middle {turtle.pen.color}  {thickness}")
+    draw_triangle(turtle, "pink", 20, 100)
+    print(f"End {turtle.pen.color}  {thickness}")
 
     # draw_two_triangles(turtle, 200)
 
@@ -23,7 +23,7 @@ def main():
 
 
 def draw_triangle(t, color, thickness, length_of_side):
-    # thickness = 20
+    thickness = 20
     t.pen = rg.Pen(color, thickness)
     for k in range(3):
         t.forward(length_of_side)
