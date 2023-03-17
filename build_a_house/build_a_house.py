@@ -4,7 +4,37 @@ import rosegraphics as rg
 def main():
     print("Build a House")
     # shapes_and_rosewindows()
-    turtles_and_turtlewindows()
+    # turtles_and_turtlewindows()
+    build_a_house_menu()
+
+def build_a_house_menu():
+    window = rg.TurtleWindow()
+
+    turtle = rg.SimpleTurtle("turtle")
+    turtle.pen = rg.Pen("red", 5)
+    turtle.speed = 20
+
+    # draw_the_house(turtle)
+
+    while True:
+        print("1: House, 2: Roof, 3: Door, 4: Window, 5: Doorknob, 6: Chimney")
+        print("r: Red, b: Blue, g: Green")
+        print("0: to exit")
+        selection = input("Selection: ")
+        if selection == "0":
+            break
+        if selection == "1":
+            draw_the_house(turtle)
+        if selection == "g":
+            turtle.pen.color = "green"
+        if selection == "r":
+            turtle.pen.color = "red"
+        if selection == "b":
+            turtle.pen.color = "blue"
+        if selection == "2":
+            draw_the_roof(turtle)
+
+    # window.close_on_mouse_click()
 
 
 def turtles_and_turtlewindows():
@@ -28,6 +58,15 @@ def draw_the_house(turtle):
         turtle.forward(160)
         turtle.left(90)
 
+
+def draw_the_roof(turtle):
+    turtle.pen_up()
+    turtle.set_heading(0)
+    turtle.go_to(rg.Point(-100, 0))
+    turtle.pen_down()
+    for k in range(3):
+        turtle.forward(200)
+        turtle.left(120)
 
 def shapes_and_rosewindows():
     # window = rg.RoseWindow(800, 500, "Build a House")
