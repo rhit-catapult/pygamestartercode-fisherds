@@ -4,53 +4,55 @@ import sys
 
 class Badguy:
     def __init__(self, screen, x, y, speed):
-        self.is_dead = False
-        self.screen = screen
-        self.x = x
-        self.y = y
-        self.speed = speed * 1.5
-        self.image = pygame.image.load("images/badguy.png")
-        self.original_x = x
+        # Store the given arguments as instance variables with the same names.
+        # Set   is_dead to False   and   original_x to x.
+        # Load the file  "badguy.png"  as the image. and set its colorkey to black.
+        # Additionally make a   move_right   instance variable set to to True (we might us it in the move method).
+        pass
 
     def move(self):
-        self.x = self.x + self.speed
-        if abs(self.x - self.original_x) > 100:
-            self.speed = -self.speed
-            self.y = self.y + 4 * abs(self.speed)
+        # Move self.speed units horizontally in the current direction.
+        # If this Badguy's horizontal position is more than 100 pixels from its original x position, then...
+        #     change the direction
+        #     move the y down 4 * self.speed units
+        pass
 
     def draw(self):
-        self.screen.blit(self.image, (self.x, self.y))
+        # Draw this Badguy, using its image at its current (x, y) position.
+        pass
 
-    def hit_by(self, missile):
-        badguy_hitbox = pygame.Rect(self.x, self.y, self.image.get_width(), self.image.get_height())
-        return badguy_hitbox.collidepoint(missile.x, missile.y)
+    def is_hit_by(self, missile):
+        # Make a Badguy hitbox rect.
+        # Return True if that hitbox collides with the xy point of the given missile.
+        pass
 
 
 class EnemyFleet:
     def __init__(self, screen, enemy_rows):
+        # Already done.  Prepares the list of Badguys.
         self.badguys = []
-        self.explosion_sound = pygame.mixer.Sound("sounds/explosion.wav")
         for j in range(enemy_rows):
             for k in range(8):
                 self.badguys.append(Badguy(screen, 80 * k, 50 * j + 20, enemy_rows))
 
     @property
     def is_defeated(self):
-        return len(self.badguys) == 0
+        # Return True if the number of badguys in this Enemy Fleet is 0,
+        # otherwise return False.
+        pass
 
     def move(self):
-        for badguy in self.badguys:
-            badguy.move()
+        # Make each Badguy in badguys move.
+        pass
 
     def draw(self):
-        for badguy in self.badguys:
-            badguy.draw()
+        # Make each Badguy in badguys draw itself.
+        pass
 
     def remove_dead_badguys(self):
         for k in range(len(self.badguys) - 1, -1, -1):
             if self.badguys[k].is_dead:
                 del self.badguys[k]
-                self.explosion_sound.play()
 
 
 def main():
@@ -72,7 +74,7 @@ def main():
         enemy_fleet.draw()
         enemy_fleet.move()
 
-        enemy_fleet.remove_dead_badguys()
+        # enemy_fleet.remove_dead_badguys()
         pygame.display.update()
 
 
