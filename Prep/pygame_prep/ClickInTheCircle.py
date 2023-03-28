@@ -40,7 +40,6 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
-
             #  2: For a MOUSEBUTTONDOWN event get the click position.
                 #  3: Determine the distance between the click position and the circle_center using the distance
                 #  3:   function and save the result into a variable called distance_from_circle
