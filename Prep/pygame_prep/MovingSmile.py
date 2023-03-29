@@ -21,8 +21,10 @@ def main():
             # 3: Make the eye pupils move with Up, Down, Left, and Right keys
             if event.type == pygame.MOUSEBUTTONDOWN:
                 is_mouth_visible = not is_mouth_visible
+                print(event.pos)
             if event.type == pygame.KEYDOWN:
                 keys_pressed = pygame.key.get_pressed()
+                print(event.key)
                 if keys_pressed[pygame.K_SPACE]:
                     is_nose_visible = not is_nose_visible
 
