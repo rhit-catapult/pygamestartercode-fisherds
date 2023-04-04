@@ -19,20 +19,21 @@ class Raindrop:
 
     def move(self):
         """ Move the self.y value of the Raindrop down the screen (y increase) at the self.speed. """
-        # TODO 11: Change the  y  position of this Raindrop by its speed.
-        pass
+        #  11: Change the  y  position of this Raindrop by its speed.
+        self.y += self.speed
+
 
     def off_screen(self):
         """ Returns true if the Raindrop y value is not shown on the screen, otherwise false. """
         # Note: this will be used for testing, but not used in the final version of the code for the sake of simplicity.
-        # TODO 13: Return  True  if the  y  position of this Raindrop is greater than 800.
-        pass
+        #  13: Return  True  if the  y  position of this Raindrop is greater than 800.
+        return self.y > self.screen.get_height()
 
     def draw(self):
         """ Draws this sprite onto the screen. """
         #  9: Draw a vertical line that is 5 pixels long, 2 pixels thick,
         #      from the current position of this Raindrop (use either a black or blue color).
-        pygame.draw.line(self.screen, (0, 0, 250), (self.x, self.y), (self.x, self.y - 5), 2)
+        pygame.draw.line(self.screen, (0, 0, 150), (self.x, self.y), (self.x, self.y + 5), 2)
 
 
 class Hero:
@@ -93,28 +94,24 @@ def main():
     """ Main game loop that creates the sprite objects, controls interactions, and draw the screen. """
     #  1: Initialize the game, display a caption, and set   screen   to a 1000x600 Screen.
     pygame.init()
-    pygame.display.set_caption("Rainy Day")
+    pygame.display.set_caption("Mike's Rainy Day")
     screen = pygame.display.set_mode((1000, 600))
 
     #  2: Make a Clock
     clock = pygame.time.Clock()
-
     #  7: As a temporary test, make a new Raindrop called test_drop at x=320 y=10
     test_drop = Raindrop(screen, 320, 10)
     # TODO 15: Make a Hero, named mike, with appropriate images, starting at position x=200 y=400.
     # TODO 15: Make a Hero, named alyssa, with appropriate images, starting at position x=700 y=400.
     # TODO 23: Make a Cloud, named cloud, with appropriate images, starting at position x=300 y=50.
 
-    #  3: Enter the game loop, with a clock tick of 60 (or so) at each iteration.
-        #  4:   Make the pygame.QUIT event stop the game.
-
+    # 3: Enter the game loop, with a clock tick of 60 (or so) at each iteration.
     while True:
         clock.tick(60)
+        # 4:   Make the pygame.QUIT event stop the game.
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
-
-
 
         # TODO 27: Inside the game loop (AFTER the events loop above), get the list of keys that are currently pressed.
         # TODO    Arrange so that the Cloud moves:
@@ -126,12 +123,15 @@ def main():
         #          If you want something to continually happen while holding the key, put it after the events loop.
 
         #  5: Inside the game loop, draw the screen (fill with white)
-        # screen.fill(pygame.color.Color("white"))
-        screen.fill((255, 255, 255))
+        screen.fill(pygame.Color("white"))
 
-        # TODO 12: As a temporary test, move test_drop
-        # TODO 14: As a temporary test, check if test_drop is off screen, if so reset the y position to 10
-        #  10: As a temporary test, draw test_drop
+        #  12: As a temporary test, move test_drop
+        test_drop.move()
+        #  14: As a temporary test, check if test_drop is off screen, if so reset the y position to 10
+
+        if test_drop.off_screen():
+            test_drop.y = 10
+        # 10: As a temporary test, draw test_drop
         test_drop.draw()
 
         # TODO 20: As a temporary test, check if test_drop is hitting Mike (or Alyssa), if so set their last_hit_time
@@ -149,7 +149,7 @@ def main():
 
         # TODO 18: Draw the Heroes (Mike and Alyssa)
 
-        # 6: Update the display and remove the pass statement below
+        #  6: Update the display and remove the pass statement below
         pygame.display.update()
 
 
