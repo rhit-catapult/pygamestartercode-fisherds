@@ -22,7 +22,6 @@ class Raindrop:
         #  11: Change the  y  position of this Raindrop by its speed.
         self.y += self.speed
 
-
     def off_screen(self):
         """ Returns true if the Raindrop y value is not shown on the screen, otherwise false. """
         # Note: this will be used for testing, but not used in the final version of the code for the sake of simplicity.
@@ -39,29 +38,40 @@ class Raindrop:
 class Hero:
     def __init__(self, screen, x, y, with_umbrella_filename, without_umbrella_filename):
         """ Creates a Hero sprite (Mike) that does not move. If hit by rain he'll put up his umbrella. """
-        # TODO 16: Initialize this Hero, as follows:
-        # TODO    - Store the screen.
-        # TODO    - Set the initial position of this Hero to x and y.
-        # TODO    - Create an image of this Hero WITH    an umbrella to the given with_umbrella_filename.
-        # TODO    - Create an image of this Hero WITHOUT an umbrella to the given without_umbrella_filename.
-        # TODO    - Set the "last hit time" to 0.
-        # TODO  Use instance variables:
-        # TODO     screen  x  y  image_umbrella   image_no_umbrella  last_hit_time.
-        pass
+        #  16: Initialize this Hero, as follows:
+        #     - Store the screen.
+        #     - Set the initial position of this Hero to x and y.
+        #     - Create an image of this Hero WITH    an umbrella to the given with_umbrella_filename.
+        #     - Create an image of this Hero WITHOUT an umbrella to the given without_umbrella_filename.
+        #     - Set the "last hit time" to 0.
+        #   Use instance variables:
+        #      screen  x  y  image_umbrella   image_no_umbrella  last_hit_time.
+        self.screen = screen
+        self.x = x
+        self.y = y
+        self.image_with_umbrella = pygame.image.load(with_umbrella_filename)
+        self.image_without_umbrella = pygame.image.load(without_umbrella_filename)
+        self.last_hit_time = 0
 
     def draw(self):
         """ Draws this sprite onto the screen. """
-        # TODO 17: Draw (blit) this Hero, at this Hero's position, WITHOUT an umbrella:
+        #  17: Draw (blit) this Hero, at this Hero's position, WITHOUT an umbrella:
         # TODO 21: Instead draw (blit) this Hero, at this Hero's position, as follows:
-        # TODO    If the current time is greater than this Hero's last_hit_time + 1,
-        # TODO      draw this Hero WITHOUT an umbrella,
-        # TODO      otherwise draw this Hero WITH an umbrella.
-        pass
+        #     If the current time is greater than this Hero's last_hit_time + 1,
+        #       draw this Hero WITHOUT an umbrella,
+        #       otherwise draw this Hero WITH an umbrella.
+        # self.screen.blit(self.image_without_umbrella, (self.x, self.y))
+
+        current_image = self.image_without_umbrella
+        if time.time() - self.last_hit_time < 1.0:
+            current_image = self.image_with_umbrella
+        self.screen.blit(current_image, (self.x, self.y))
 
     def hit_by(self, raindrop):
         """ Returns true if the given raindrop is hitting this Hero, otherwise false. """
-        # TODO 19: Return True if this Hero is currently colliding with the given Raindrop.
-        pass
+        #  19: Return True if this Hero is currently colliding with the given Raindrop.
+        hero_hit_box = pygame.Rect(self.x, self.y, 170, 192)
+        return hero_hit_box.collidepoint((raindrop.x, raindrop.y))
 
 
 class Cloud:
@@ -101,8 +111,11 @@ def main():
     clock = pygame.time.Clock()
     #  7: As a temporary test, make a new Raindrop called test_drop at x=320 y=10
     test_drop = Raindrop(screen, 320, 10)
-    # TODO 15: Make a Hero, named mike, with appropriate images, starting at position x=200 y=400.
-    # TODO 15: Make a Hero, named alyssa, with appropriate images, starting at position x=700 y=400.
+    #  15: Make a Hero, named mike, with appropriate images, starting at position x=200 y=400.
+    # 15: Make a Hero, named alyssa, with appropriate images, starting at position x=700 y=400.
+    mike = Hero(screen, 300, 400, "Mike_umbrella.png", "Mike.png")
+    alyssa = Hero(screen, 700, 400, "Alyssa_umbrella.png", "Alyssa.png")
+
     # TODO 23: Make a Cloud, named cloud, with appropriate images, starting at position x=300 y=50.
 
     # 3: Enter the game loop, with a clock tick of 60 (or so) at each iteration.
@@ -129,13 +142,27 @@ def main():
         test_drop.move()
         #  14: As a temporary test, check if test_drop is off screen, if so reset the y position to 10
 
-        if test_drop.off_screen():
-            test_drop.y = 10
+        # if test_drop.off_screen():
+        #     test_drop.y = 10
+
         # 10: As a temporary test, draw test_drop
         test_drop.draw()
 
-        # TODO 20: As a temporary test, check if test_drop is hitting Mike (or Alyssa), if so set their last_hit_time
-        # TODO 22: When you run this test, slow the rain down to a speed of 2 to see the result, then remove that code
+        #  20: As a temporary test, check if test_drop is hitting Mike (or Alyssa), if so set their last_hit_time
+        if mike.hit_by(test_drop):
+            mike.last_hit_time = time.time()
+            test_drop.x = 750
+            test_drop.y = 10
+            test_drop.speed = 5  # optional
+        if alyssa.hit_by(test_drop):
+            alyssa.last_hit_time = time.time()
+            test_drop.x = 320
+            test_drop.y = 10
+            test_drop.speed = 3  # optional
+
+        # TODO 22: Remove the code that reset the y of the test_drop when off_screen()
+        #          Instead reset the y to 10 when mike is hit, additionally set the y to 750
+        #          Then add similar code to alyssa that sets her last_hit_time and moves the drop to 10 320
 
         # TODO 26: Draw the Cloud.
 
@@ -147,7 +174,9 @@ def main():
             # TODO  30: if the Hero (Mike or Alyssa) is hit by a Raindrop, set the Hero's last_time_hit to the current time.
             # Optional  - if the Raindrop is off the screen or hitting a Hero, remove it from the Cloud's list of raindrops.
 
-        # TODO 18: Draw the Heroes (Mike and Alyssa)
+        #  18: Draw the Heroes (Mike and Alyssa)
+        mike.draw()
+        alyssa.draw()
 
         #  6: Update the display and remove the pass statement below
         pygame.display.update()
