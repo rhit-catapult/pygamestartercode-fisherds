@@ -30,28 +30,45 @@ def get_xy_position(row, col):
 
 class Game:
     def __init__(self):
-        # TODO 5: Create an empty board, called board
+        #  5: Create an empty board, called board
         #         A list that contains 3 lists, each of those lists has 3 "." values.
         #     - Create a game_state_string set to X's turn
         #     - Create a turn_counter variable set to 0
         #     - Create a game_is_over variable set to False
-        pass
+        self.board = [[".", ".", "."], [".", ".", "."], [".", ".", "."]]
+        self.game_state_string = "X's turn"
+        self.turn_counter = 0
+        self.game_is_over = False
 
     def __repr__(self):
         """ Returns a string that represents the game. """
-        # TODO 7: Use a "".format() command to create a string to shows the board, turn_counter, and game_state_string
+        #  7: Use a "".format() command to create a string to shows the board, turn_counter, and game_state_string
+        return f"State: {self.game_state_string}  \nBoard: {self.board}  \nTurn: {self.turn_counter}"
 
     def take_turn(self, row, col):
         """Handle the current turn of the player and update board array"""
-        # TODO 8: Check if game_is_over and return from this method (doing nothing) if True
-        # TODO 9: Check if the value for row and col are valid.  Return (doing nothing) if invalid.
-        # TODO 10: Check if the mark at the requested row col is ".".  Return (doing nothing) if it is not "."
+        #  8: Check if game_is_over and return from this method (doing nothing) if True
+        if self.game_is_over:
+            return  # This game is over, don't allow clicks.  Don't be silly.
+        #  9: Check if the value for row and col are valid.  Return (doing nothing) if invalid.
+        if row < 0 or row > 2 or col < 0 or col > 2:
+            return  # Defensive programming.  The ViewController can pass me anything!
+        #  10: Check if the mark at the requested row col is ".".  Return (doing nothing) if it is not "."
+        if self.board[row][col] != ".":
+            return  # this square is full!
 
-        # TODO 11: Determine if it is X's turn or O's turn (even turn_counter means X's turn, odd for O's turn)
+        #  11: Determine if it is X's turn or O's turn (even turn_counter means X's turn, odd for O's turn)
         #     - Modify the board by setting the current row col to an "X" or an "O" as appropriate
         #     - Update the game_state_string as appropriate "O's Turn" or "X's Turn"
+        if self.turn_counter % 2 == 0:
+            self.board[row][col] = "X"
+            self.game_state_string = "O's Turn"
+        else:
+            self.board[row][col] = "O"
+            self.game_state_string = "X's Turn"
 
-        # TODO 12: Increment the turn_counter
+        #  12: Increment the turn_counter
+        self.turn_counter += 1
 
         self.check_for_game_over()
 
@@ -78,12 +95,16 @@ class ViewController:
 
     def __init__(self, screen):
         """ Creates the view controller (the Tic-Tac-Toe game you see) """
-        # TODO 4: Initialize the ViewController, as follows:
+        #  4: Initialize the ViewController, as follows:
         #     - Store the screen.
         #     - Create the game model object.
         #     - Create images for the board, X, and O images filenames.
         #  Use instance variables:   screen game board_image x_image o_image
-        pass
+        self.screen = screen
+        self.game = Game()
+        self.board_image = pygame.image.load("board.png")
+        self.x_image = pygame.image.load("x_mark.png")
+        self.o_image = pygame.image.load("o_mark.png")
 
     def check_event(self, event):
         """ Takes actions as necessary based on the current event. """
@@ -112,18 +133,29 @@ def main():
     pygame.init()
     pygame.mixer.music.load("win.mp3")
     screen = pygame.display.set_mode((380, 400))
-    # TODO 1: Create an instance of the ViewController class called view_controller
+    #  1: Create an instance of the ViewController class called view_controller
+    view_controller = ViewController(screen)
 
-    # TODO 6: Write test code as needed to develop your model object.
+    # 6: Write test code as needed to develop your model object.
+    print(view_controller.game)   # New unstarted game
+    view_controller.game.take_turn(1, 1)
+    print(view_controller.game)  # Now the game is O's turn, counter = 1, with an "X" in the middle
+    view_controller.game.take_turn(0, 0)
+    print(view_controller.game)  # "X's Turn" board O.. .X. ...
+
+
+    sys.exit()  # While testing I don't care about the screen at all!
 
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
-            # TODO 2: Pass the event to the view_controller
+            #  2: Pass the event to the view_controller
+            view_controller.check_event(event)
 
         screen.fill(pygame.Color("white"))
-        # TODO 3: Draw the view_controller
+        #  3: Draw the view_controller
+        view_controller.draw()
         pygame.display.update()
 
 
