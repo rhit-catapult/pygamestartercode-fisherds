@@ -73,8 +73,11 @@ class Game:
         self.check_for_game_over()
 
     def check_for_game_over(self):
-        # TODO 18: If the turn_counter is 9 then the game is over
+        #  18: If the turn_counter is 9 then the game is over
         #      If >=9 update the game_is_over value and set the game_state_string to "Tie Game"
+        if self.turn_counter >= 9:
+            self.game_state_string = "Tie Game"
+
         lines = []
         lines.append(self.board[0][0] + self.board[0][1] + self.board[0][2])
         lines.append(self.board[1][0] + self.board[1][1] + self.board[1][2])
@@ -85,8 +88,17 @@ class Game:
         lines.append(self.board[0][0] + self.board[1][1] + self.board[2][2])
         lines.append(self.board[0][2] + self.board[1][1] + self.board[2][0])
 
-        # TODO 19: Use the lines list to determine if there is a winner.
+        #  19: Use the lines list to determine if there is a winner.
         #    If there is a winner, update the game_state_string, play a sound, and set game_is_over to True.
+        for line in lines:
+            if line == "XXX":
+                self.game_is_over = True
+                self.game_state_string = "X Wins!"
+                pygame.mixer.music.play()
+            if line == "OOO":
+                self.game_is_over = True
+                self.game_state_string = "O Wins!"
+                pygame.mixer.music.play()
 
 
 # --------------------------- View Controller ---------------------------
@@ -108,22 +120,30 @@ class ViewController:
 
     def check_event(self, event):
         """ Takes actions as necessary based on the current event. """
-        # TODO 16: If the event is pygame.MOUSEBUTTONUP
+        #  16: If the event is pygame.MOUSEBUTTONUP
         #     Get the mouse click position (event.pos or pygame.mouse.get_pos())
         #     Get the row and col values of that position using get_row_col
         #     Inform the model object about this event
-        # TODO 17: If the event is pygame.KEYDOWN
+        #  17: If the event is pygame.KEYDOWN
         #     Get the pressed_keys
         #     If the key is pygame.K_SPACE, then reset the game.
-        pass
+        if event.type == pygame.MOUSEBUTTONUP:
+            # get_row_col(event.pos)
+            row, col = get_row_col(pygame.mouse.get_pos())
+            self.game.take_turn(row, col)
+        if event.type == pygame.KEYDOWN:
+            keys_pressed = pygame.key.get_pressed()
+            if keys_pressed[pygame.K_SPACE]:
+                self.game = Game()
+
 
     def draw(self):
         """ Draw the board based on the marked store in the board configuration array """
         #  13: Blit the board_image onto the screen at the x y position of row=0 col=0
-        # TODO 14: Use a nested loop (via range) to go over all marks of the game.board
+        #  14: Use a nested loop (via range) to go over all marks of the game.board
         #    If the mark is "X", blit an X image at the x y position of row col
         #    If the mark is "O", blit an O image at the x y position of row col
-        # TODO 15: Update the display caption to be the game.game_state_string
+        #  15: Update the display caption to be the game.game_state_string
         self.screen.blit(self.board_image, get_xy_position(0, 0))
         for row in range(3):
             for col in range(3):
@@ -132,7 +152,7 @@ class ViewController:
                     self.screen.blit(self.x_image, get_xy_position(row, col))
                 if current_mark == "O":
                     self.screen.blit(self.o_image, get_xy_position(row, col))
-
+        pygame.display.set_caption(self.game.game_state_string)
 
 
 # --------------------------- Controller ---------------------------
@@ -148,16 +168,16 @@ def main():
     # TODO: Later comment this all out!
     # ---------------------------------------
     # 6: Write test code as needed to develop your model object.
-    print(view_controller.game)   # New unstarted game
-    view_controller.game.take_turn(1, 1)
-    print(view_controller.game)  # Now the game is O's turn, counter = 1, with an "X" in the middle
-    view_controller.game.take_turn(0, 0)
-    print(view_controller.game)  # "X's Turn" board O.. .X. ...
-
-    view_controller.game.take_turn(0, 1)  # X top middle
-    view_controller.game.take_turn(2, 0)  # O in the lower left
-    view_controller.game.take_turn(2, 1)  # X bottom middle
-    print(view_controller.game)  # X Wins!
+    # print(view_controller.game)   # New unstarted game
+    # view_controller.game.take_turn(1, 1)
+    # print(view_controller.game)  # Now the game is O's turn, counter = 1, with an "X" in the middle
+    # view_controller.game.take_turn(0, 0)
+    # print(view_controller.game)  # "X's Turn" board O.. .X. ...
+    #
+    # view_controller.game.take_turn(0, 1)  # X top middle
+    # view_controller.game.take_turn(2, 0)  # O in the lower left
+    # view_controller.game.take_turn(2, 1)  # X bottom middle
+    # print(view_controller.game)  # X Wins!
     # ---------------------------------------
 
     while True:
