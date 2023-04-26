@@ -8,7 +8,9 @@ class Badguy:
         # Set   is_dead to False   and   original_x to x.
         # Load the file  "badguy.png"  as the image. and set its colorkey to black.
         # Additionally make a   move_right   instance variable set to to True (we might us it in the move method).
-        pass
+        self.screen = screen
+        self.x = x
+        self.y = y
 
     def move(self):
         # Move self.speed units horizontally in the current direction.
@@ -19,7 +21,7 @@ class Badguy:
 
     def draw(self):
         # Draw this Badguy, using its image at its current (x, y) position.
-        pass
+        self.screen.blit(self.image, (self.x, self.y))
 
     def is_hit_by(self, missile):
         # Make a Badguy hitbox rect.

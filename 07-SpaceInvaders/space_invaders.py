@@ -1,7 +1,9 @@
 import pygame
 import sys
 
-# TODO: when need import the fighter_missile_module
+# when need import the fighter_missile_module
+import fighter_missile_module as fmm
+
 # TODO: when need import the enemy_fleet_module
 
 
@@ -13,7 +15,8 @@ def main():
 
     # TODO 9: Set    enemy_rows    to an initial value of 3.
     # TODO 10: Create an EnemyFleet object (called enemy_fleet) with the screen and enemy_rows
-    # TODO 1: Create a Fighter (called fighter)
+    #  1: Create a Fighter (called fighter)
+    fighter = fmm.Fighter(screen)
 
     while True:
         clock.tick(60)
