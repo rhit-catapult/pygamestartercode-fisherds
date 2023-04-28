@@ -4,7 +4,8 @@ import sys
 # when need import the fighter_missile_module
 import fighter_missile_module as fmm
 
-# TODO: when need import the enemy_fleet_module
+# : when need import the enemy_fleet_module
+import enemy_fleet_module
 
 
 def main():
@@ -13,8 +14,11 @@ def main():
     pygame.display.set_caption("SPACE INVADERS!")
     screen = pygame.display.set_mode((640, 650))
 
-    # TODO 9: Set    enemy_rows    to an initial value of 3.
-    # TODO 10: Create an EnemyFleet object (called enemy_fleet) with the screen and enemy_rows
+    #  9: Set    enemy_rows    to an initial value of 3.
+    enemy_rows = 3
+    #  10: Create an EnemyFleet object (called enemy_fleet) with the screen and enemy_rows
+    enemy_fleet = enemy_fleet_module.EnemyFleet(screen, enemy_rows)
+
     #  1: Create a Fighter (called fighter)
     fighter = fmm.Fighter(screen)
 
@@ -41,8 +45,10 @@ def main():
         screen.fill((0, 0, 0))
         fighter.draw()
 
-        # TODO 11: Move the enemy_fleet
-        # TODO 12: Draw the enemy_fleet
+        #  11: Move the enemy_fleet
+        enemy_fleet.draw()
+        #  12: Draw the enemy_fleet
+        enemy_fleet.move()
 
         #  6: For each missile in the fighter missiles
         #    7: Move the missile
@@ -50,25 +56,29 @@ def main():
         for missile in fighter.missiles:
             missile.move()
             missile.draw()
-        fighter.remove_exploded_missiles()
 
         # TODO 12: For each badguy in the enemy_fleet.badguys list
         #     TODO 13: For each missile in the fighter missiles
         #         TODO 14: If the badguy is hit by the missile
         #             TODO 15: Mark the badguy is_dead = True
         #             TODO 16: Mark the missile has_exploded = True
+        for badguy in enemy_fleet.badguys:
+            for missile in fighter.missiles:
+                if badguy.is_hit_by(missile):
+                    badguy.is_dead = True
+                    missile.has_exploded = True
 
-        # Optional TODOs (technically this is already done within fighter.remove_exploded_missiles)
-        # TODO 16.5: For each missile in the fighter missiles
-        #     TODO 16.5: If the missle is off the screen
-        #         TODO 16.5: Mark the missile has_exploded = True (cleaning up off screen stuff)
+        #  17: Use the fighter to remove exploded missiles
+        fighter.remove_exploded_missiles()
+        #  18: Use the enemy_fleet to remove dead badguys
+        enemy_fleet.remove_dead_badguys()
 
-        # TODO 17: Use the fighter to remove exploded missiles
-        # TODO 18: Use the enemy_fleet to remove dead badguys
-
-        # TODO 19: If the enemy is_defeated
-        #     TODO 20: Increment the enemy_rows
-        #     TODO 21: Create a new enemy_fleet with the screen and enemy_rows
+        #  19: If the enemy is_defeated
+        #      20: Increment the enemy_rows
+        #      21: Create a new enemy_fleet with the screen and enemy_rows
+        if enemy_fleet.is_defeated:
+            enemy_rows += 1
+            enemy_fleet = enemy_fleet_module.EnemyFleet(screen, enemy_rows)
 
         # TODO 22: Check for your death.  Figure out what needs to happen.
         # Hints: Check if a Badguy gets a y value greater than 545

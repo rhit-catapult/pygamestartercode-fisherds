@@ -7,17 +7,23 @@ class Badguy:
         # Store the given arguments as instance variables with the same names.
         # Set   is_dead to False   and   original_x to x.
         # Load the file  "badguy.png"  as the image. and set its colorkey to black.
-        # Additionally make a   move_right   instance variable set to to True (we might us it in the move method).
         self.screen = screen
         self.x = x
         self.y = y
+        self.image = pygame.image.load("badguy.png")
+        self.speed = speed
+        self.original_x = x
+        self.is_dead = False
 
     def move(self):
         # Move self.speed units horizontally in the current direction.
         # If this Badguy's horizontal position is more than 100 pixels from its original x position, then...
         #     change the direction
         #     move the y down 4 * self.speed units
-        pass
+        self.x += self.speed
+        if abs(self.x - self.original_x) >= 100:
+            self.speed = - self.speed
+            self.y += 4 * abs(self.speed)
 
     def draw(self):
         # Draw this Badguy, using its image at its current (x, y) position.
@@ -26,7 +32,8 @@ class Badguy:
     def is_hit_by(self, missile):
         # Make a Badguy hitbox rect.
         # Return True if that hitbox collides with the xy point of the given missile.
-        pass
+        hitbox = pygame.Rect(self.x, self.y, self.image.get_width(), self.image.get_height())
+        return hitbox.collidepoint(missile.x, missile.y)
 
 
 class EnemyFleet:
@@ -41,15 +48,17 @@ class EnemyFleet:
     def is_defeated(self):
         # Return True if the number of badguys in this Enemy Fleet is 0,
         # otherwise return False.
-        pass
+        return len(self.badguys) == 0
 
     def move(self):
         # Make each Badguy in badguys move.
-        pass
+        for badguy in self.badguys:
+            badguy.move()
 
     def draw(self):
         # Make each Badguy in badguys draw itself.
-        pass
+        for badguy in self.badguys:
+            badguy.draw()
 
     def remove_dead_badguys(self):
         for k in range(len(self.badguys) - 1, -1, -1):
