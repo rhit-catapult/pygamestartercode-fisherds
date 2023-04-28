@@ -21,21 +21,36 @@ def main():
     while True:
         clock.tick(60)
         for event in pygame.event.get():
-            # TODO 5: If the event type is KEYDOWN and pressed_keys[pygame.K_SPACE] is True, then fire a missile
+            #  5: If the event type is KEYDOWN and pressed_keys[pygame.K_SPACE] is True, then fire a missile
+            if event.type == pygame.KEYDOWN:
+                pressed_keys = pygame.key.get_pressed()
+                if pressed_keys[pygame.K_SPACE]:
+                    fighter.fire()
             if event.type == pygame.QUIT:
                 sys.exit()
 
+        #  3: If pygame.K_LEFT is pressed and move the fighter left 5 (i.e. -5)
+        #  4: If pygame.K_RIGHT is pressed and move the fighter right 5
+        #  2: Draw the fighter
+        pressed_keys = pygame.key.get_pressed()
+        if pressed_keys[pygame.K_LEFT]:
+            fighter.move(-5)
+        if pressed_keys[pygame.K_RIGHT]:
+            fighter.move(5)
+
         screen.fill((0, 0, 0))
-        # TODO 3: If pygame.K_LEFT is pressed and move the fighter left 5 (i.e. -5)
-        # TODO 4: If pygame.K_RIGHT is pressed and move the fighter right 5
-        # TODO 2: Draw the fighter
+        fighter.draw()
 
         # TODO 11: Move the enemy_fleet
         # TODO 12: Draw the enemy_fleet
 
-        # TODO 6: For each missile in the fighter missiles
-        #   TODO 7: Move the missile
-        #   TODO 8: Draw the missile
+        #  6: For each missile in the fighter missiles
+        #    7: Move the missile
+        #    8: Draw the missile
+        for missile in fighter.missiles:
+            missile.move()
+            missile.draw()
+        fighter.remove_exploded_missiles()
 
         # TODO 12: For each badguy in the enemy_fleet.badguys list
         #     TODO 13: For each missile in the fighter missiles

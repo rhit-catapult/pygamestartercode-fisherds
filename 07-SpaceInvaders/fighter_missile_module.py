@@ -1,6 +1,7 @@
 import pygame
 import sys
 
+
 class Missile:
     def __init__(self, screen, x, y):
         # Store the data.  Initialize:   y to 591   and   has_exploded to False.
