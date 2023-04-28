@@ -14,6 +14,7 @@ def main():
     pygame.display.set_caption("SPACE INVADERS!")
     screen = pygame.display.set_mode((640, 650))
 
+    is_game_over = False
     #  9: Set    enemy_rows    to an initial value of 3.
     enemy_rows = 3
     #  10: Create an EnemyFleet object (called enemy_fleet) with the screen and enemy_rows
@@ -33,6 +34,18 @@ def main():
             if event.type == pygame.QUIT:
                 sys.exit()
 
+        screen.fill((0, 0, 0))
+        fighter.draw()
+
+        #  11: Move the enemy_fleet
+        enemy_fleet.draw()
+
+        if is_game_over:
+            game_over_image = pygame.image.load("gameover.png")
+            screen.blit(game_over_image, (170, 200))
+            pygame.display.update()
+            continue
+
         #  3: If pygame.K_LEFT is pressed and move the fighter left 5 (i.e. -5)
         #  4: If pygame.K_RIGHT is pressed and move the fighter right 5
         #  2: Draw the fighter
@@ -42,11 +55,6 @@ def main():
         if pressed_keys[pygame.K_RIGHT]:
             fighter.move(5)
 
-        screen.fill((0, 0, 0))
-        fighter.draw()
-
-        #  11: Move the enemy_fleet
-        enemy_fleet.draw()
         #  12: Draw the enemy_fleet
         enemy_fleet.move()
 
@@ -57,11 +65,11 @@ def main():
             missile.move()
             missile.draw()
 
-        # TODO 12: For each badguy in the enemy_fleet.badguys list
-        #     TODO 13: For each missile in the fighter missiles
-        #         TODO 14: If the badguy is hit by the missile
-        #             TODO 15: Mark the badguy is_dead = True
-        #             TODO 16: Mark the missile has_exploded = True
+        #  12: For each badguy in the enemy_fleet.badguys list
+        #      13: For each missile in the fighter missiles
+        #          14: If the badguy is hit by the missile
+        #              15: Mark the badguy is_dead = True
+        #              16: Mark the missile has_exploded = True
         for badguy in enemy_fleet.badguys:
             for missile in fighter.missiles:
                 if badguy.is_hit_by(missile):
@@ -85,6 +93,9 @@ def main():
         #    Note: 545 is screen.get_height() -
         #    If that happens set a variable (game_over) as appropriate
         #    If the game is over, show the gameover.png image at (170, 200)
+        for badguy in enemy_fleet.badguys:
+            if badguy.y > fighter.y:
+                is_game_over = True
 
         # TODO 23: Create a Scoreboard class (from scratch)
         # Hints: Instance variables: screen, score, and font (size 30)
