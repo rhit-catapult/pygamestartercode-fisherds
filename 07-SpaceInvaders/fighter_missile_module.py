@@ -42,6 +42,7 @@ class Fighter:
         self.x = self.screen.get_width() / 2 - self.image.get_width() / 2
         self.y = self.screen.get_height() - self.image.get_height()
         self.missiles = []
+        self.fire_sound = pygame.mixer.Sound("pew.wav")
 
     def move(self, move_amount_x):
         # Move this Fighter by the move_amount_x
@@ -62,6 +63,7 @@ class Fighter:
         # Append that Missile to this Fighter's list of Missile objects.
         new_missile = Missile(self.screen, self.x + self.image.get_width() / 2, self.y)
         self.missiles.append(new_missile)
+        self.fire_sound.play()
 
     def remove_exploded_missiles(self):
         # Already complete

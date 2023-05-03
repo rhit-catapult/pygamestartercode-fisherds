@@ -39,6 +39,7 @@ class Badguy:
 class EnemyFleet:
     def __init__(self, screen, enemy_rows):
         # Already done.  Prepares the list of Badguys.
+        self.explosion_sound = pygame.mixer.Sound("explosion.wav")
         self.badguys = []
         for j in range(enemy_rows):
             for k in range(8):
@@ -64,6 +65,7 @@ class EnemyFleet:
         for k in range(len(self.badguys) - 1, -1, -1):
             if self.badguys[k].is_dead:
                 del self.badguys[k]
+                self.explosion_sound.play()
 
 
 def main():

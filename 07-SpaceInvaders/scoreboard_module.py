@@ -20,7 +20,7 @@ def main():
     pygame.display.set_caption("Testing the Scoreboard only")
     screen = pygame.display.set_mode((640, 650))
 
-    print(pygame.font.get_fonts())
+    # print(pygame.font.get_fonts())
 
     scoreboard = Scoreboard(screen)
 
