@@ -7,6 +7,8 @@ import fighter_missile_module as fmm
 # : when need import the enemy_fleet_module
 import enemy_fleet_module
 
+import scoreboard
+
 
 def main():
     pygame.init()
